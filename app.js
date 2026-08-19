@@ -3,13 +3,13 @@ const app = express()
 const cors =  require('cors')
 const helmet =  require('helmet')
 const rateLimit =  require('express-rate-limit')
-const app = express()
 const port = 3000
 require('dotenv').config()
 require('./config/db')
 
 
 //  IMPORT DES ROUTES
+const authRoutes = require('./Routes/authRoute')
 
 //Middlewares
 const limiter = rateLimit({
@@ -30,6 +30,9 @@ app.use(cors())
 app.use(limiter)
 
 // Monter le routeur sur chemain de base
+const BASE_ROUTE = '/api/v1'
+app.use(`${BASE_ROUTE}/auth`, authRoutes)
+
 
 //      URL
 app.get('/', (req, res) => {

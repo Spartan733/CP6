@@ -71,6 +71,7 @@ const register = async (req, res) => {
     }
 }
 
+
 //US2
 const login = async (req, res) => {
     try{
@@ -105,6 +106,22 @@ const login = async (req, res) => {
                 role: user.role,
             }
         })
+
+    } catch (err) {
+        res.status(500).json({ message: 'Server error during login', error: err.message})
+    }
+}
+
+//US3
+const modifie = async (req, res) => {
+    try{
+        const 
+
+
+
+
+
+
 
     } catch (err) {
         res.status(500).json({ message: 'Server error during login', error: err.message})
