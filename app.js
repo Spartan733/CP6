@@ -1,0 +1,43 @@
+const express = require('express')
+const app = express()
+const cors =  require('cors')
+const helmet =  require('helmet')
+const rateLimit =  require('express-rate-limit')
+const app = express()
+const port = 3000
+require('dotenv').config()
+require('./config/db')
+
+
+//  IMPORT DES ROUTES
+
+//Middlewares
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 100,
+    message: { status: 429, error: 'Too many requests'}
+})
+
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+        crossOriginResourcePolicy: { policy: "cross-origin" }
+    })
+)
+
+app.use(express.json())
+app.use(cors())
+app.use(limiter)
+
+// Monter le routeur sur chemain de base
+
+//      URL
+app.get('/', (req, res) => {
+    res.send('CP6')
+})
+
+app.listen(port, () => {
+    // Ce console log s'affiche uniquement coté SERVEUR et non coté CLIENT
+    console.log(`Serveur démarré sur http://localhost:${port}`)
+})
+
