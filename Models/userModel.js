@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema(
             required: [true, 'Password is required'],
             minlength: 6,
             select: false, // Don't return password by default
+        },
+        role: {
+            type: String,
+            enum: ['joueur', 'capitaine', 'organisateur', 'admin'],
+            default: 'joueur'
         }
     },
     {
@@ -40,4 +45,5 @@ userSchema.pre('save', async function(){
 userSchema.methods.comparePassword = async function (enteredPaswword) {
     return await bcrypt.compare(enteredPaswword, this.password)
 }
-module.exports = mongoose.mdel('User', userSchema)
+
+module.exports = mongoose.model('User', userSchema)
