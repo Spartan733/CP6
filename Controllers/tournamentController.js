@@ -87,4 +87,27 @@ const updateTournament = async (req, res) => {
     }
 }
 
-module.exports = { tournament, updateTournament }
+//US10
+const deleteTournament = async (req, res) => {
+    const tournamentID = req.params.id
+
+    const tournament = await Tournament.findById(tournamentId)
+    if(!tournament){
+        return res.status(404).json({message: 'Tournament not found'})
+    }
+
+    const isCreator = tournament.createBy.toString() == req.user._id.toString()
+
+    const isAdmin = req.user.role === 'admin'
+
+    if(!isCreator){
+        return res.status(404).json({message: 'Your do not have the permission to delete this tournament'})
+    }
+
+    await tournament.findByIdAndDelete(tournamentId)
+
+    res.status(200).json({message: 'Tournament deleted with succes'})
+
+}
+
+module.exports = { tournament, updateTournament, deleteTournament }
