@@ -74,36 +74,47 @@ const register = async (req, res) => {
 
 //US2
 const login = async (req, res) => {
-    try{
+    try {
+
         const { email, password } = req.body
 
-        if(!email || !password){
-            return res.status(400).json({ message: 'Please provide email and password'})
+        if (!email || !password) {
+
+            return res.status(400).json({
+                message: 'Email et mot de passe obligatoires'
+            })
         }
 
-        //Trouve l user et selectionne le champ de mdp
         const user = await User.findOne({ email }).select('+password')
-        if(!user){
-            return res.status(401).json({message: 'Invalid credentials'})
+
+        if (!user) {
+
+            return res.status(401).json({
+                message: 'Email ou mot de passe incorrect'
+            })
         }
 
 
-        //Verifie si les mdp sont identiques
         const isMatch = await user.comparePassword(password)
-        if(!isMatch){
-            return res.status(401).json({ message: 'Invalid credentials'})
-        }
 
+        if (!isMatch) {
+
+            return res.status(401).json({
+                message: 'Email ou mot de passe incorrect'
+            })
+        }
+n
         const token = generateToken(user._id)
 
         res.status(200).json({
-            message: 'Login successful',
+            message: 'Connexion réussie',
             token,
+
             user: {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role,
+                role: user.role
             }
         })
 
@@ -113,18 +124,50 @@ const login = async (req, res) => {
 }
 
 //US3
-const modifie = async (req, res) => {
+const updateProfile = async (req, res) => {
     try{
-        const 
+        const userId =  req.body
 
+        const  { name, email } = req.body
 
+        const user = await User.findById(userId)
 
+        if(!User) {
+            return res.status(400).json({message: 'User not found'})
+        }
 
+        if(name){
+            user.name = name
+        }
 
+        if(email){
+            if(!validator.isEmail(email)){
+                return res.status(400).json({message: 'Invalid email'})
+            }
+            
+            const emailIsAlreadyUsed = await User.findOne({ email, _id: { $ne: userId}})
 
+            if(emailIsAlreadyUsed){
+                return res.status(400).json({message: 'Email is already us'})
+            }
 
+            user.email = email
+        }
 
+        await user.save()
+
+        res.status(200).json({message: 'Profil modifie with success',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }})
+        
     } catch (err) {
-        res.status(500).json({ message: 'Server error during login', error: err.message})
-    }
+        res.status(500).json({message: 'Erreur lors de la modification du profil', error: err.message})
+    } 
 }
+
+
+module.exports = { register, login, updateProfile }

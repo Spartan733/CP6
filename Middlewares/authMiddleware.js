@@ -1,34 +1,60 @@
-const jwt = require("jsonwebtoken")
-const User =  require('../Models/userModel')
+const jwt = require('jsonwebtoken')
+const User = require('../Models/userModel')
 
-const JWT_SECRET = process.env.JWT_SECRET
 
-const authMiddleware =  async (req, res, next) => {
+
+const protect = async (req, res, next) => {
+
     try {
-        let generateToken
 
-        if(req.headers.authorization?.startsWith('Bearer')){
-            token = req.headers.authorization.split (' ')[1]
+        const authHeader = req.headers.authorization
+
+        if (!authHeader) {
+
+            return res.status(401).json({
+                message: 'Vous devez être connecté'
+            })
         }
-        if(!token){
-            return res.status(401).json({ message: 'Not authorized, token missing'})
+
+        const token = authHeader.split(' ')[1]
+
+        // Si le token n'existe pas
+        if (!token) {
+
+            return res.status(401).json({
+                message: 'Token manquant'
+            })
         }
 
-        //Verifie le Token
-        const decoded = jwt.verify(token, JWT_SECRET)
 
-        //Recupere le user qui correspond au token
+        const decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        )
+
         const user = await User.findById(decoded.id)
-        if(!user){
-            return res.status(401).json({message: 'User no longer exists'})
+
+
+        if (!user) {
+
+            return res.status(401).json({
+                message: 'Utilisateur introuvable'
+            })
         }
 
-        req.user = user;
+        req.user = user
+
+
         next()
 
     } catch (err) {
-        return res.status(401).json({ message: 'Not authorized, invalid token', error: err.message })
+
+        return res.status(401).json({
+            message: 'Token invalide'
+        })
     }
 }
 
-module.exports = authMiddleware
+module.exports = {
+    protect
+}
