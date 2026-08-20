@@ -103,7 +103,7 @@ const login = async (req, res) => {
                 message: 'Email ou mot de passe incorrect'
             })
         }
-n
+
         const token = generateToken(user._id)
 
         res.status(200).json({

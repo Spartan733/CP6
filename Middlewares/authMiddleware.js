@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken')
 const User = require('../Models/userModel')
 
 
-
 const protect = async (req, res, next) => {
 
     try {
@@ -25,7 +24,6 @@ const protect = async (req, res, next) => {
                 message: 'Token manquant'
             })
         }
-
 
         const decoded = jwt.verify(
             token,
