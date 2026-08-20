@@ -1,34 +1,36 @@
 const mongoose = require('mongoose')
 
+// On crée le schéma d'un tournoi
 const tournamentSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: [true, 'Tournament name is required'],
-            ref: 'User'
+            required: [true, 'Le nom du tournoi est obligatoire'],
+            trim: true
         },
         game: {
             type: String,
-            required: [true, 'Game name is required']
+            required: [true, 'Le jeu est obligatoire'],
+            trim: true
         },
         date: {
             type: Date,
-            required: [true, 'Date is required']
+            required: [true, 'La date est obligatoire']
         },
         rules: {
             type: String,
-            required: [true, 'Rules is required']
+            required: [true, 'Les règles sont obligatoires'],
+            trim: true
         },
-        assignedTo: {
+        createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
-        },
-        createdBy: {
-            type: String,
-            ref: 'User',
-            required: true
         }
+    },
+
+    {
+        timestamps: true
     }
 )
 
