@@ -22,10 +22,10 @@ const createTeamMember = async (req, res) => {
             members: [req.user._id]
         })
 
-        res.status(201).json({message: 'Team cerate with success'})
+        res.status(201).json({message: 'Team create with success'})
 
     } catch (err) {
-        res.status(500).json({message: "Erreur lors de la création de l'équipe", error: err.message})
+        res.status(500).json({message: "Error during creation of the team", error: err.message})
     }
 }
 
@@ -35,9 +35,94 @@ const joinTeam = async (req, res) =>{
         const teamId = req.params.id
 
         const team = await Team.findById(teamId)
+        if(!team){
+            return res.status(404).json({message: 'Team not found'})
+        }
+
+        const alreadyMember = team.members.some( member => member.toString() === req.user._id.toString())
+        if(alreadyMember){
+            return res.status(400).json({message: 'You are already member of this team'})
+        }
+
+        team.members.push(req.user._id)
+
+        await team.save()
+
+        res.status(200).json({message: 'You have rejoin the team'})
 
     } catch (err) {
-        res.status(500).json({message: "Error durinf team registration"})
+        res.status(500).json({message: "Error during team registration"})
     }
 }
-module.exports = { createTeam }
+
+//US7
+const addMember = async (req, res) => {
+    try {
+        const teamId = req.params.id
+
+    const { userId } = req.body
+
+    const team = await Team.findById(teamId)
+
+    if(!team){
+        return res.status(404).json({message: 'Team not found'})
+    }
+
+    if(team.capitaine.toString() !== req.user._id.toString()){
+        return res.status(403).json({message: 'Only capitaine can manage'})
+    }
+    const user = await User.findById(userId)
+
+    if(!user){
+        return res.status(404).json({message: 'Player not found'})
+    }
+
+    const alreadyMember = team.members.some( member => member.toString() === userId)
+    if(alreadyMember){
+        return res.status(400).json({message: 'This player is already in the team'})
+    }
+
+    team.members.push(userId)
+
+    await team.save()
+
+    res.status(200).json({message: 'Player add in the team'})
+
+    } catch (err) {
+        res.status(500).json({message: "Error when addition of the player", error: err.message})
+    } 
+}
+
+
+const removeMember = async (req, res) => {
+    try {
+        const teamId = req.params.id
+
+        const userId  = req.params.userId
+
+        const team = await Team.findById(teamId)
+        if(!team){
+            return res.status(404).json({message: 'Team not found'})
+        }
+
+        if(team.capitaine.toString() !== req.user._id.toString()){
+            return res.status(403).json({message: 'Only captain can remove a player'})
+        }
+
+        if(userId === req.user._id.toString()){
+            return res.status(403).json({message: 'The captain cannot remove himself.'})
+        }
+
+        team.members = team.members.filter(member => member.toString() !== userId)
+
+        await team.save()
+
+        res.status(200).json({message: 'Player removed from the team'})
+
+    } catch (err) {
+        res.status(500).json({message: 'Error during the removal of the player'})
+    }
+}
+
+
+module.exports = { createTeam, joinTeam, addMember, removeMember}

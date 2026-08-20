@@ -11,6 +11,7 @@ require('./config/db')
 //  IMPORT DES ROUTES
 const authRoutes = require('./Routes/authRoute')
 const teamRoutes = require('./Routes/teamRoutes')
+const tournamentRoutes = require('./Routes/tournamentRoutes')
 
 //Middlewares
 const limiter = rateLimit({
@@ -34,6 +35,7 @@ app.use(limiter)
 const BASE_ROUTE = '/api/v1'
 app.use(`${BASE_ROUTE}/auth`, authRoutes)
 app.use(`${BASE_ROUTE}/teams`, teamRoutes)
+app.use(`${BASE_ROUTE}/tournaments`, tournamentRoutes)
 
 //      URL
 app.get('/', (req, res) => {
