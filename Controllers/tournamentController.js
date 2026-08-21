@@ -153,7 +153,6 @@ const registrationTeam = async (req, res) => {
     }
 }
 
-
 //US12
 const openTournamentList = async (req, res) => {
     try {
@@ -237,4 +236,4 @@ const userInscription = async (req, res) => {
     }
 }
 
-module.exports = { tournament, updateTournament, deleteTournament, registrationTeam, openTournamentList, registeredTeam, tournamentStat, userInscription }
+module.exports = { createTournament, updateTournament, deleteTournament, registrationTeam, openTournamentList, registeredTeam, tournamentStat, userInscription }

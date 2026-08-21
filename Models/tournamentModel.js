@@ -5,21 +5,21 @@ const tournamentSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: [true, 'Le nom du tournoi est obligatoire'],
+            required: [true, 'Tournament name is required'],
             trim: true
         },
         game: {
             type: String,
-            required: [true, 'Le jeu est obligatoire'],
+            required: [true, 'Game name is required'],
             trim: true
         },
         date: {
             type: Date,
-            required: [true, 'La date est obligatoire']
+            required: [true, 'Date is required']
         },
         rules: {
             type: String,
-            required: [true, 'Les règles sont obligatoires'],
+            required: [true, 'Rules a required'],
             trim: true
         },
         createdBy: {
