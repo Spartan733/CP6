@@ -222,4 +222,20 @@ const tournamentStat = async (req, res) => {
     }
 }
 
-module.exports = { tournament, updateTournament, deleteTournament, tournamentStat }
+//US18
+const userInscription = async (req, res) => {
+    try{
+        const teams = await Team.find({ memebers: req.user._id})
+
+        const teamIds = teams.map(team => team._id)
+
+        const tournaments = await Tournament.find({ registeredTeam: { $in: teamIds}})
+
+        res.status(200).json({number: tournaments.length, tournaments: tournaments})
+        
+    } catch (err) {
+        res.status(500).json({message: 'Error loading registration'})
+    }
+}
+
+module.exports = { tournament, updateTournament, deleteTournament, registrationTeam, openTournamentList, registeredTeam, tournamentStat, userInscription }

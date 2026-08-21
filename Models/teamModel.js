@@ -4,25 +4,23 @@ const teamSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: [true, 'Team name is required'],
+            required: [true, "Le nom de l'équipe est obligatoire"],
             trim: true
         },
-        role: {
-            type: String,
-            reqiured:[true, 'Role name is required']
-            
-        },
-        assignedTo: {
+        captain: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
         },
-        createdBy: {
-            type: String,
-            ref: 'User',
-            required: true
-        }
-
+        members: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ]
+    },
+    {
+        timestamps: true
     }
 )
 

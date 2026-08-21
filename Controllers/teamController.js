@@ -148,4 +148,23 @@ const deleteTeam = async (req, res) => {
     }
 }
 
-module.exports = { createTeam, joinTeam, addMember, removeMember}
+//US17
+const teamDetails = async (req, res) => {
+    try {
+        const teamId = req.params.id
+
+        const team = await Team.findById(teamId).populate("captain", "name email role").populate("members", "name email role")
+
+        if(!team){
+            return res.status(403).json({message: 'Team not found'})
+        }
+
+
+        res.status(200).json({equipe: team})
+
+    } catch (err) {
+        res.status(500).json({message: 'Error loading team details'})
+    }
+}
+
+module.exports = { createTeam, joinTeam, addMember, removeMember, teamDetails}
