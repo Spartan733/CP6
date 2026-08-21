@@ -1,5 +1,7 @@
 const Tournament = require('../Models/tournamentModel')
 
+const Team = require('../Models/teamModel')
+
 //US8
 const createTournament = async (requestAnimationFrame, res) => {
     try {
@@ -108,6 +110,62 @@ const deleteTournament = async (req, res) => {
 
     res.status(200).json({message: 'Tournament deleted with succes'})
 
+}
+
+//US11
+const inscriptionTeam = async (req, res) => {
+    try{
+        const tournamentId = req.params.id
+        const { teamId } = req.body
+
+        if(!teamId){
+            return res.status(404).json({message: 'Id team is necessarry'})
+        }
+
+        const tournament = await Tournament.findById(tournamentId)
+
+        if(!tounament){
+            return res.status(404).json({message: 'Tournament not found'})
+        }
+
+        const team = await Team.findById(team.id)
+
+        if(!team){
+            return res.status(404).json({message: 'Team not found'})
+        }
+
+        if(team.captain.toString() !== req.user._id.toString()){
+            return res.status(403).json({message: 'Only captain can register the team'})
+        }
+
+        const alreadyRegistered =  tournament.registeredTeams.includes(teamId)
+
+        if(alreadyRegistered){
+            return res.status(400).json({mesage: 'Team are already registered in the tournament'})
+        }
+
+        tournament.registeredTeams.save()
+
+        await tournament.save()
+        res.status(200).json({message: 'Team as register in the tournament', tournament})
+
+    } catch (err) {
+        res.status(500).json({message: 'Error during incription of the team'})
+    }
+}
+
+
+//US12
+const openTournamentList = async (req, res) => {
+    try {
+        const tournaments = await Tournament.find({registrationOpen: true})
+
+        res.status(200).json({message: 'nombre: tournament.lenght,tounaments'})
+
+
+    } catch (err) {
+        res.status(500).json({message: 'Error during tournament data retrieval', error: err.message})
+    }
 }
 
 module.exports = { tournament, updateTournament, deleteTournament }
