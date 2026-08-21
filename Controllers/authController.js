@@ -8,7 +8,7 @@ const JWT_EXPIRES_IN = '364d'
 // Génération du JWT token
 const generateToken = (id) => {
     return jwt.sign({ id }, JWT_SECRET, {
-        expiresIn: JWT_EXPRES_IN
+        expiresIn: JWT_EXPIRES_IN
     })
 }
 

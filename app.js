@@ -4,6 +4,7 @@ const cors =  require('cors')
 const helmet =  require('helmet')
 const rateLimit =  require('express-rate-limit')
 const port = 3000
+
 require('dotenv').config()
 require('./config/db')
 
@@ -12,6 +13,7 @@ require('./config/db')
 const authRoutes = require('./Routes/authRoute')
 const teamRoutes = require('./Routes/teamRoutes')
 const tournamentRoutes = require('./Routes/tournamentRoutes')
+
 
 //Middlewares
 const limiter = rateLimit({

@@ -113,7 +113,7 @@ const deleteTournament = async (req, res) => {
 }
 
 //US11
-const inscriptionTeam = async (req, res) => {
+const registrationTeam = async (req, res) => {
     try{
         const tournamentId = req.params.id
         const { teamId } = req.body
@@ -168,4 +168,30 @@ const openTournamentList = async (req, res) => {
     }
 }
 
+//US13
+const registeredTeam = async (req, res) => {
+    try{
+        const tournamentId = req.params.id
+
+        const tournament = await Tournament.findById(tournamentId).populate({path: "registeredTeam", 
+            populate: {
+                path: "members",
+                select: "name email"
+            }
+        })
+
+        if(!tournament) {
+            return res.status(404).json({message: 'Tournament not found'})
+        }
+
+        if(tournament.createBy.toString() !== req.user._id.toString()){
+            return res.status(403).json({message: 'Your are not authorized to view these teams'})
+        }
+
+        res.status(200).json({tournament: tournament.name, equipes: registeredTeams})
+
+    } catch (err) {
+        res.status(500).json({message: 'Error retrieving teams'})
+    }
+}
 module.exports = { tournament, updateTournament, deleteTournament }
