@@ -124,5 +124,28 @@ const removeMember = async (req, res) => {
     }
 }
 
+//US14
+const deleteTeam = async (req, res) => {
+    try {
+        if(req.user.role !== "admin"){
+            return res.status(403).json({message: 'Only administrator can delete a team'})
+        }
+
+        const teamId = req.params.id
+
+        const team = await Team.findById(teamId)
+
+        if(!team){
+            return res.status(404).json({message: 'Team not found'})
+        }
+
+        await Team.findByIdAndDelete(teamId)
+
+        res.status(200).json({message: 'Team delete with success'})
+
+    } catch (err) {
+        res.status(500).json({message: 'Error during deleted team', error: err.message})
+    }
+}
 
 module.exports = { createTeam, joinTeam, addMember, removeMember}
