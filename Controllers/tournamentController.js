@@ -194,4 +194,32 @@ const registeredTeam = async (req, res) => {
         res.status(500).json({message: 'Error retrieving teams'})
     }
 }
-module.exports = { tournament, updateTournament, deleteTournament }
+
+//US15
+const tournamentStat = async (req, res) => {
+    try {
+        if(req.user.role !== "admin"){
+            return res.status(403).json({message: 'Only an admin can see the stats'})
+        }
+
+        const tournaments = await Tournament.find()
+
+        const stats =[]
+
+        for(const tournament of tournaments){
+            stats.push({
+                id: tournament._id,
+                name: tournament.name,
+                game: tournament.game,
+                nbrTeams: tournament.registeredTeams.length
+            })
+        }
+
+        res.status(500).json({stats})
+
+    } catch (err) {
+        res.status(500).json({message: 'Error Error retrieving statistics'})
+    }
+}
+
+module.exports = { tournament, updateTournament, deleteTournament, tournamentStat }
