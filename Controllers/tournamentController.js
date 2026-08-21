@@ -1,5 +1,4 @@
 const Tournament = require('../Models/tournamentModel')
-
 const Team = require('../Models/teamModel')
 
 //US8

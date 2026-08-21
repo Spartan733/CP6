@@ -4,15 +4,15 @@ const router = express.Router()
 const { protect } = require('../Middlewares/authMiddleware')
 
 
-const { createTeam, joinTeam, addMember, removeMember, deleteTeam, getTeamDetails } = require('../Controllers/teamController')
+const { createTeamMember, joinTeam, addMember, removeMember, deleteTeam, teamDetails } = require('../Controllers/teamController')
 
-router.post('/', protect, createTeam)
+router.post('/', protect, createTeamMember)
 
 router.post('/:id/join', protect, joinTeam)
 
 router.delete('/:id', protect, deleteTeam)
 
-router.get('/:id',protect, getTeamDetails)
+router.get('/:id',protect, teamDetails)
 
 router.post('/:id/members', protect, addMember)
 

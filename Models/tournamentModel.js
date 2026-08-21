@@ -30,9 +30,15 @@ const tournamentSchema = new mongoose.Schema(
         registrationOpen: {
             type: Boolean,
             default: true
-        }
+        },
+        registeredTeams: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Team'
+            }
+        ]
     },
-
+    
     {
         timestamps: true
     }

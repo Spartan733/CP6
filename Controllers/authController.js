@@ -71,7 +71,6 @@ const register = async (req, res) => {
     }
 }
 
-
 //US2
 const login = async (req, res) => {
     try {

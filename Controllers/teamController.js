@@ -93,7 +93,7 @@ const addMember = async (req, res) => {
     } 
 }
 
-
+//US7
 const removeMember = async (req, res) => {
     try {
         const teamId = req.params.id
@@ -167,4 +167,4 @@ const teamDetails = async (req, res) => {
     }
 }
 
-module.exports = { createTeam, joinTeam, addMember, removeMember, teamDetails}
+module.exports = { createTeamMember, joinTeam, addMember, removeMember, deleteTeam, teamDetails}
