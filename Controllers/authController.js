@@ -169,5 +169,50 @@ const updateProfile = async (req, res) => {
     } 
 }
 
+//US16
+const modifieProfile = async (req, res) => {
+    try{   
+        if(req.user.role !== "admin"){
+            return res.status(403).json({message: 'Only an admin can modifie roles'})
+        }
 
-module.exports = { register, login, updateProfile }
+        const userId = req.params.id
+
+        const { role } = req.body
+
+        const authorizedRole = [
+            "joueur",
+            "capitaine",
+            "organisateur",
+            "admin"
+        ]
+        if(!authorizedRole.includes(role)) {
+            return rs.status(403).json({mesage: 'Role demand is not valid'})
+        }
+
+        const user = await User.findById(userId)
+
+        if(!user){
+            return res.status(404).json({message: 'User not found'})
+        }
+
+        user.role = role
+
+        await user.save()
+
+        res.status(200).json({message: 'The role has been successfully modified',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            } 
+        })
+
+
+    } catch (err) {
+        res.status(500).json({message: 'Error during the modification'})
+    }
+}
+
+module.exports = { register, login, updateProfile, modifieProfile }
